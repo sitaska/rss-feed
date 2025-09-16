@@ -42,7 +42,7 @@ app.get('/rss', async (req, res) => {
   const feed = new RSS({
     title: 'Las Cositas de Sita',
     description: 'Blog de Sita',
-    feed_url: 'http://localhost:' + PORT + '/rss',
+    feed_url: 'https://rss-feed-imc1.onrender.com/rss',
     site_url: 'https://lascositasdesita.com/blog',
     language: 'es',
   });
@@ -65,3 +65,4 @@ app.get('/rss', async (req, res) => {
 app.listen(PORT, () => {
   console.log(`Servidor RSS corriendo en http://localhost:${PORT}/rss`);
 });
+
