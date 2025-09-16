@@ -12,7 +12,7 @@ Este proyecto es un servidor Node.js que expone un endpoint `/rss` para generar 
    ```sh
    npm start
    ```
-3. Accede a `http://localhost:3000/rss` para ver el feed RSS.
+3. Accede a `(https://rss-feed-imc1.onrender.com/rss)` para ver el feed RSS.
 
 ## Personalización
 
@@ -22,3 +22,4 @@ Debes implementar la lógica para obtener los posts del blog en Framer dentro de
 - express
 - rss
 - rss-parser
+
