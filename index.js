@@ -30,7 +30,26 @@ async function getPostData(url) {
     const $ = cheerio.load(data);
     const title = $('title').first().text() || url;
     const description = $('meta[name="description"]').attr('content') || '';
-    const date = $('meta[property="article:published_time"]').attr('content') || new Date().toISOString();
+    // Buscar fecha en el div con data-framer-name="Fecha de publicación"
+    let date = $('div[data-framer-name="Fecha de publicación"] p').first().text().trim();
+    if (date) {
+      // Convertir "13 ago 2025" a formato ISO
+      const meses = {
+        'ene': '01', 'feb': '02', 'mar': '03', 'abr': '04', 'may': '05', 'jun': '06',
+        'jul': '07', 'ago': '08', 'sep': '09', 'oct': '10', 'nov': '11', 'dic': '12'
+      };
+      const match = date.match(/(\d{1,2})\s([a-záéíóú]{3,})\s(\d{4})/i);
+      if (match) {
+        const dia = match[1].padStart(2, '0');
+        const mes = meses[match[2].toLowerCase().slice(0,3)] || '01';
+        const anio = match[3];
+        date = `${anio}-${mes}-${dia}T00:00:00.000Z`;
+      } else {
+        date = new Date().toISOString();
+      }
+    } else {
+      date = $('meta[property="article:published_time"]').attr('content') || new Date().toISOString();
+    }
     return { title, description, url, date };
   } catch (err) {
     console.error('Error leyendo post:', url, err);
@@ -42,7 +61,7 @@ app.get('/rss', async (req, res) => {
   const feed = new RSS({
     title: 'Las Cositas de Sita',
     description: 'Blog de Sita',
-    feed_url: 'https://rss-feed-imc1.onrender.com/rss',
+    feed_url: 'http://localhost:' + PORT + '/rss',
     site_url: 'https://lascositasdesita.com/blog',
     language: 'es',
   });
@@ -65,4 +84,3 @@ app.get('/rss', async (req, res) => {
 app.listen(PORT, () => {
   console.log(`Servidor RSS corriendo en http://localhost:${PORT}/rss`);
 });
-
